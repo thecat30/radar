@@ -19,9 +19,9 @@ void DataTransfert(unsigned int);
 unsigned int getData();
 unsigned int getFilteredData();
 int ready = 1;
-char stop[] = "Sonar Stop ";
-char gone[] = "Sonar Play ";
-char backspace[] = "cm\n";
+char stop[] = "Sonar Stop\n\r";
+char gone[] = "Sonar Play\n\r";
+char backspace[] = "cm\n\r";
 char longueur[] = "Longueur : ";
 
 void UART_Init()
