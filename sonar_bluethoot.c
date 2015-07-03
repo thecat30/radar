@@ -24,7 +24,6 @@ unsigned int getFilteredData();
 
 void UART_Init()
 {
-
         //      BAUDCON: BAUD RATE CONTROL REGISTER           //
         BRG16 = 0; // 8-bit Baud Rate Generator is used
         SPBRG = 25; // Baudrate config
@@ -42,8 +41,6 @@ void UART_Init()
 
         TRISC7 = 1;// RX
         TRISC6 = 1;// TX
-
-	
 }
 
 char UART_TX_Empty()
@@ -57,7 +54,6 @@ char UART_Data_Ready()
 }
 char UART_Read()
 {
-
   while(!RCIF);
   return RCREG;
 }
@@ -110,7 +106,6 @@ void main(void)
 
         Delay10KTCYx(100);
     }
-
 }
 
 unsigned int getData()
@@ -119,7 +114,7 @@ unsigned int getData()
 
     arg1 = (unsigned int)ADRESH << 8;
     arg1 += ADRESL;
-    arg2 = 325;
+    arg2 = 390; //325
     MULT16();
 
     ADCON0bits.GO_NOT_DONE = 1;
@@ -129,9 +124,9 @@ unsigned int getData()
 
 unsigned int getFilteredData()
 {
-    unsigned int distance = 0;
+    unsigned int distance = getData();
     unsigned int previousDistance = 0;
-    unsigned int a = 40;
+    unsigned int a = 10;
 
     for (int i = 0; i < 64; ++i) {
         previousDistance = distance;
