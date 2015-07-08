@@ -6,6 +6,8 @@
 
 void UART_Init()
 {
+        TRISB = 0xFF; //PORTB as Input
+        nRBPU = 0;    //Enables PORTB Internal Pull Up Resistors
         //      BAUDCON: BAUD RATE CONTROL REGISTER           //
         BRG16 = 0; // 8-bit Baud Rate Generator is used
         SPBRG = 25; // Baudrate config
@@ -34,7 +36,7 @@ void DataTransfert(unsigned int distance)
         UART_Write_Text(number);
         UART_Write_Text(backspace);  
     }
-    Delay10KTCYx(100);
+    Delay10KTCYx(1);
     
     buffer = UART_Read();
     if(buffer!='0') {
