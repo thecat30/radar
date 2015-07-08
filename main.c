@@ -4,6 +4,8 @@
 #include <delays.h>
 #include <pic18f45k20.h>
 
+#include "buzzer.h"
+#include "sonar.h"
 #include "uart.h"
 
 #pragma config FOSC=INTIO7, FCMEN=OFF, IESO=OFF, PWRT=OFF, BOREN=OFF
@@ -14,7 +16,13 @@
 #pragma config WRT2=OFF, WRT3=OFF, WRTB=OFF, WRTC=OFF, WRTD=OFF
 #pragma config EBTRB=OFF
 
-unsigned int distance = 0;
+//#include "bit_settings.h"
+#include "my_i2c.h"
+#include "font.h"
+#include "bitmap.h"
+#include "ssd1306.h"
+
+extern unsigned int distance = 0;
 volatile int j=0;
 
 void init();
@@ -67,13 +75,19 @@ void interrupt high_isr (void)
 
 void main()
 {
+  char number[4];
   init();
   
   while (1) {
       distance = getFilteredData();
       DataTransfert(distance);
+     
+      sprintf(number, "%d", distance);
 
-      if (distance>100)
+      Oled_SetFont(Segment_25x40, 25, 40, 46, 58);
+      Oled_Text(number, 30, 3);
+
+      if (distance > 100)
         {
             TRISBbits.RB3 = 1;      // Disable RB3 output
             PIE1bits.TMR1IE = 0;    // Timer1 interrupt disabled
@@ -95,4 +109,14 @@ void init()
   initSonar();
 
   initBuzzer();
+
+  //INIT OLED
+    I2C_Close();              // Close the  I2C Bus
+    I2C_Init(1);             // I2C 400kHz, 20MHz-CRYSTAL
+    Oled_Init();
+    Oled_SetFont(Terminal12x16, 12, 16, 32,127);
+    Oled_FillScreen(0x00);
+    Oled_ConstText("SONAR:", 35, 0);
+    Oled_ConstText("L=", 2, 5);
+    Oled_ConstText("cm", 105, 5);
 }
