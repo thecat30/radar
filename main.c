@@ -1,4 +1,3 @@
-#include <sw_uart.h>
 #include <xc.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,23 +14,20 @@
 #pragma config WRT2=OFF, WRT3=OFF, WRTB=OFF, WRTC=OFF, WRTD=OFF
 #pragma config EBTRB=OFF
 
-unsigned int arg1, arg2;
-unsigned long res;
-extern void MULT16(void);
-
 void main(void)
 {
   unsigned int distance = 0;
-  OSCCON = 0b01010010;
+  OSCCON = 0b00110010;
   TRISB = 0xFF; //PORTB as Input
   nRBPU = 0;    //Enables PORTB Internal Pull Up Resistors
   UART_Init();
   
-    ADCON0 = 0b00000100;
-    ADCON1 = 0b00001110;
-    ADCON2 = 0b10111010;
-    ADCON0bits.ADON = 1;
-    ADCON0bits.GO_NOT_DONE = 1;
+  ADCON0 = 0b00000100;
+  ADCON1 = 0b00001110;
+  ADCON2 = 0b10111010;
+  ADCON0bits.ADON = 1;
+  ADCON0bits.GO_NOT_DONE = 1;
+  
   while (1) {
       distance = getFilteredData();
       DataTransfert(distance);
