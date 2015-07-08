@@ -18,6 +18,7 @@ extern void MULT16(void);
 void initSonar();
 unsigned int getData();
 unsigned int getFilteredData();
+char* getChar(unsigned int value);
 
 #endif	/* SONAR_H */
 

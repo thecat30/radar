@@ -1,4 +1,5 @@
 #include "uart.h"
+#include "sonar.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <delays.h>
@@ -21,15 +22,15 @@ void UART_Init()
         CREN = 1;  // Enables receiver
         SPEN = 1;  // Serial port enabled
         TRISC7 = 1;// RX
-        TRISC6 = 1;// TX
+        TRISC6 = 0;// TX
         RCIF =1;
 }
 
 void DataTransfert(unsigned int distance)
 {   
     char buffer;
-    char number[4];
-    sprintf(number, "%d", distance);
+    char* number = getChar(distance);
+    
     if(ready==1)
     {
         UART_Write_Text(longueur); 

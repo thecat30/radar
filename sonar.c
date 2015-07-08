@@ -22,6 +22,7 @@ unsigned int getData()
 
     return res >> 8;
 }
+
 unsigned int getFilteredData()
 {
     unsigned int distance = getData();
@@ -44,4 +45,15 @@ unsigned int getFilteredData()
     }
 
     return distance;
+}
+
+char* getChar(unsigned int value)
+{
+    char text[4] = {'0', '0', '0', '\0'};
+
+    text[0] += value / 100;
+    text[1] += (value - ((text[0] - '0') * 100)) / 10;
+    text[2] += value % 10;
+
+    return text;
 }
