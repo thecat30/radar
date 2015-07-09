@@ -64,9 +64,11 @@ void interrupt high_isr (void)
             {
                 j=0;
                 TRISBbits.RB3=0;
+
                 do{
                     j++;
-                }while(j<1000);
+                } while (j < 1000);
+
                TRISBbits.RB3=1;
                TMR1H = 194;             // preset for timer1 MSB register
                TMR1L = 98;             // preset for timer1 LSB register
@@ -76,10 +78,7 @@ void interrupt high_isr (void)
             PIR1bits.TMR1IF = 0;    // Timer1 interrupt Flag cleared
     }
 
-
-
     if(RCIF) {
-
        if(RCREG == '²')
        {
            UART_Write_Text(EnterMenu);
@@ -156,6 +155,14 @@ void main()
               number[i] = temp[i];
           }
 
+
+          if (SonarReady == 1) {
+              Oled_Text("!", 110, 0);
+          }
+          else {
+              Oled_FillScreen(0x00, 110, 2);
+          }
+
           Oled_SetFont(Segment_25x40, 25, 40, 46, 58);
           Oled_Text(number, 30, 3);
 
@@ -183,7 +190,7 @@ void init()
     I2C_Init(1);             // I2C 400kHz, 20MHz-CRYSTAL
     Oled_Init();
     Oled_SetFont(Terminal12x16, 12, 16, 32,127);
-    Oled_FillScreen(0x00);
+    Oled_FillScreen(0x00, 0, 0);
     Oled_ConstText("SONAR:", 35, 0);
     Oled_ConstText("L=", 2, 5);
     Oled_ConstText("cm", 105, 5);

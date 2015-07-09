@@ -45,7 +45,7 @@ void Oled_SetFont(cuchar *_font, uchar _width, uchar _height, uchar _min, uchar 
 void Oled_WriteChar(uchar c, uchar seg, uchar pag);
 void Oled_ConstText(cschar *buffer, uchar seg, uchar pag);
 void Oled_Text(schar *buffer, uchar seg, uchar pag);
-void Oled_FillScreen(uchar pattern);
+void Oled_FillScreen(uchar pattern, uchar seg, uchar pag);
 void Oled_Image(cuchar *buffer);
 void Right_HorizontalScroll(uchar start_page, uchar end_page, uchar set_time);
 void Left_HorizontalScroll(uchar start_page, uchar end_page, uchar set_time);
@@ -78,7 +78,7 @@ Oled_Command(0xDB); Oled_Command(0x40); // Set VCOMH Deselect Level
 Oled_Command(0x8D); Oled_Command(0x14); // Charge Pump Setting
 
 Oled_Command(0xAF);                     // Set Display ON
-Oled_FillScreen(0x00);                  // Clear screen
+Oled_FillScreen(0x00, 0, 0);            // Clear screen
 }
 
 
@@ -164,16 +164,29 @@ while(*buffer)
      }
 }
 
-void Oled_FillScreen(uchar pattern){
-unsigned char i,j;
-for(i = 0; i < 8; i++)
-   {
-    Oled_SetPointer(0, i);
-    for(j = 0; j < 128; j++)
-       {
-        Oled_WriteRam(pattern);
-       }
-   }
+void Oled_FillScreen(uchar pattern, uchar seg, uchar pag)
+{
+    unsigned char i,j,page;
+    page=pag;
+
+    if(seg == 0 && pag == 0){
+        for(i = 0; i < 8; i++) {
+            Oled_SetPointer(0, i);
+
+            for(j = 0; j < 128; j++) {
+                Oled_WriteRam(pattern);
+            }
+        }
+    }
+    else {
+        for(i=0;i<pag;i++) {
+            Oled_SetPointer(seg, i);
+
+            for(j = 0; j < 20; j++) {
+                Oled_WriteRam(pattern);
+            }
+        }
+    }
 }
 
 void Oled_Image(cuchar *buffer){
