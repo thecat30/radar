@@ -75,14 +75,20 @@ void interrupt high_isr (void)
 
 void main()
 {
+    char* temp;
   char number[4];
   init();
   
   while (1) {
       distance = getFilteredData();
       DataTransfert(distance);
-     
-      sprintf(number, "%d", distance);
+
+      temp = getChar(distance);
+
+      for (int i = 0; i < 4; ++i) {
+          number[i] = temp[i];
+      }
+      //sprintf(number, "%d", distance);
 
       Oled_SetFont(Segment_25x40, 25, 40, 46, 58);
       Oled_Text(number, 30, 3);
@@ -97,6 +103,7 @@ void main()
         {
             PIE1bits.TMR1IE = 1;    // Timer1 interrupt enabled
         }
+      PIE1bits.TMR1IE = 0; //OUPS
     }
 }
 

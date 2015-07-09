@@ -28,7 +28,7 @@ SSPCON1 |= 0b00100000;          // enable synchronous serial port
 SSPADD = clock_output;          // clock = FOSC/(4 * (SSPADD + 1))
 }
 void I2C_Start(void){
-I2C_Idle();
+//I2C_Idle();
 SSPCON2bits.SEN = 1;
 while(SSPCON2bits.SEN);
 }
@@ -38,7 +38,7 @@ SSPCON2bits.RSEN = 1;
 while(SSPCON2bits.RSEN);
 }
 void I2C_Stop(void){
-I2C_Idle();
+//I2C_Idle();
 SSPCON2bits.PEN = 1;
 while(SSPCON2bits.PEN);
 }
@@ -73,7 +73,7 @@ else
 return (buffer_I2C);              // return with read byte
 }
 unsigned char I2C_WriteByte(unsigned char data_out){
-I2C_Idle();
+//I2C_Idle();
 SSPBUF = data_out;        // write single byte to SSP1BUF
 /*if(SSPCON1bits.WCOL)      // test if write collision occurred
 return(1);                // if WCOL bit is set return negative #
@@ -82,6 +82,7 @@ else
    if(((SSPCON1&0x0F)==0x08) || ((SSPCON1&0x0F)==0x0B)) //master mode only
        {*/
         while(SSPSTATbits.BF);       //wait until write cycle is complete
+        //while(SSPSTATbits.RW);
 	//I2C_Idle();                  //ensure module is idle
 	//if(SSPCON2bits.ACKSTAT)      //test for ACK condition received
 	//return(2);		      //Return NACK
