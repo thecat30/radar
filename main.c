@@ -21,6 +21,7 @@
 #include "font.h"
 #include "bitmap.h"
 #include "ssd1306.h"
+#include "bargraph.h"
 
 extern unsigned int distance = 0;
 volatile int j=0;
@@ -38,7 +39,6 @@ void interrupt high_isr (void)
                 TMR1L = 149;             // preset for timer1 LSB register
                 //0 sec
             }
-
             else if ((distance>=20)&&(distance<40))
             {
                 TRISBbits.RB3=~TRISBbits.RB3;
@@ -46,7 +46,6 @@ void interrupt high_isr (void)
                 TMR1L = 62;             // preset for timer1 LSB register
                 // 0.1s
             }
-
             else if ((distance>=40)&&(distance<70))
             {
                 TRISBbits.RB3=~TRISBbits.RB3;
@@ -55,7 +54,6 @@ void interrupt high_isr (void)
 
                 // 0.1s
             }
-
             else
             {
                 j=0;
@@ -70,40 +68,49 @@ void interrupt high_isr (void)
 
             T1CONbits.TMR1ON  = 1;
             PIR1bits.TMR1IF = 0;    // Timer1 interrupt Flag cleared
-            }
+    }
 }
 
 void main()
 {
-    char* temp;
+  char* temp;
   char number[4];
+  char count = 0;
+  
   init();
   
   while (1) {
-      distance = getFilteredData();
-      DataTransfert(distance);
+      //distance = getFilteredData();
+      distance = getData();
 
-      temp = getChar(distance);
+      setBargraph(distance);
 
-      for (int i = 0; i < 4; ++i) {
-          number[i] = temp[i];
+      if (distance > 100) {
+        TRISBbits.RB3 = 1;      // Disable RB3 output
+        PIE1bits.TMR1IE = 0;    // Timer1 interrupt disabled
       }
-      //sprintf(number, "%d", distance);
+      else {
+        PIE1bits.TMR1IE = 1;    // Timer1 interrupt enabled
+      }
 
-      Oled_SetFont(Segment_25x40, 25, 40, 46, 58);
-      Oled_Text(number, 30, 3);
-
-      if (distance > 100)
-        {
-            TRISBbits.RB3 = 1;      // Disable RB3 output
-            PIE1bits.TMR1IE = 0;    // Timer1 interrupt disabled
-        }
-
-        else
-        {
-            PIE1bits.TMR1IE = 1;    // Timer1 interrupt enabled
-        }
       PIE1bits.TMR1IE = 0; //OUPS
+
+      ++count;
+
+      if (180 < count) {
+          temp = getChar(distance);
+
+          for (int i = 0; i < 4; ++i) {
+              number[i] = temp[i];
+          }
+
+          Oled_SetFont(Segment_25x40, 25, 40, 46, 58);
+          Oled_Text(number, 30, 3);
+
+          DataTransfert(distance);
+
+          count = 0;
+      }
     }
 }
 
@@ -112,6 +119,8 @@ void init()
   OSCCON = 0b00110010;
   
   UART_Init();
+
+  initBargraph();
 
   initSonar();
 

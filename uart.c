@@ -37,8 +37,6 @@ void DataTransfert(unsigned int distance)
         UART_Write_Text(number);
         UART_Write_Text(backspace);
     }
-
-    Delay10KTCYx(1);
     
     buffer = UART_Read();
     if(buffer!='0') {

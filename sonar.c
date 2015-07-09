@@ -26,8 +26,8 @@ unsigned int getData()
 unsigned int getFilteredData()
 {
     unsigned int distance = getData();
-    unsigned int previousDistance = distance;
-    unsigned int a = 10;
+    unsigned int previousDistance;
+    unsigned int a = 5;
 
     for (int i = 0; i < 64; ++i) {
         previousDistance = distance;
@@ -37,11 +37,11 @@ unsigned int getFilteredData()
 
         distance = res;
         arg1 = previousDistance;
-        arg2 = 255 - a;
+        arg2 = 127 - a;
         MULT16();
 
         distance += res;
-        distance = distance >> 8;
+        distance = distance >> 7;
     }
 
     return distance;
