@@ -86,7 +86,7 @@ void interrupt high_isr (void)
            Mode = 0;
            index = 0;
        }
-       else if(RCREG == '&')
+       else if(RCREG == 27 && Mode == 0)
        {
            Mode = 1;
            UART_Write_Text(Retour);
