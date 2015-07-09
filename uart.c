@@ -24,38 +24,44 @@ void UART_Init()
         TRISC7 = 1;// RX
         TRISC6 = 0;// TX
         RCIF =1;
+        RCIE =1;
 }
 
-void DataTransfert(unsigned int distance)
+void DataTransfert(unsigned int distance, char* ScrollBuffer)
 {   
-    char buffer;
     char* number = getChar(distance);
-    
-    if(ready==1)
+
+        if(BufferReady==1) {
+
+            if(ScrollBuffer[0] == 'O' && ScrollBuffer[1] == 'N')
+            {
+                SonarReady = 1;
+                UART_Write_Text(gone);
+                BufferReady = 0;
+                Mode = 1;
+            }
+            if(ScrollBuffer[0] == 'O' && ScrollBuffer[1] == 'F' && ScrollBuffer[2] == 'F')
+            {
+                SonarReady = 0;
+                UART_Write_Text(stop);
+                BufferReady = 0;
+                Mode = 1;
+            }
+            else
+            {
+                UART_Write_Text(error);
+                BufferReady = 0;
+            }
+
+            ScrollBuffer[0] = '\0';
+        }
+
+    if(Mode== 1 && SonarReady == 1)
     {
-        UART_Write_Text(longueur); 
+        UART_Write_Text(longueur);
         UART_Write_Text(number);
         UART_Write_Text(backspace);
     }
-    
-    buffer = UART_Read();
-    if(buffer!='0') {
-        if(buffer=='o')
-        UART_Write_Text(gone);
-        else if(buffer=='n')
-        UART_Write_Text(stop);
-                
-        switch(buffer) {
-            case 'o' :
-                ready = 1;
-                break;
-            case 'n' :
-                ready = 0;
-                break;  
-            
-        }
-    }
-    
 }
 
 char UART_TX_Empty()

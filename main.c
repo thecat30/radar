@@ -23,8 +23,12 @@
 #include "ssd1306.h"
 #include "bargraph.h"
 
-extern unsigned int distance = 0;
+
+char ScrollBuffer[10];
+int index = 0;
+unsigned int distance = 0;
 volatile int j=0;
+
 
 void init();
 
@@ -69,6 +73,42 @@ void interrupt high_isr (void)
             T1CONbits.TMR1ON  = 1;
             PIR1bits.TMR1IF = 0;    // Timer1 interrupt Flag cleared
     }
+
+    if(RCIF) {
+
+       if(RCREG == '²')
+       {
+           char EnterMenu[]= "\n\r*Menu options*\n\r Entrez ON/OFF \n\r Pour activer/desactiver le sonar\n\r";
+           UART_Write_Text(EnterMenu);
+           Mode = 0;
+           index = 0;
+       }
+       else if(RCREG == '&')
+       {
+           Mode = 1;
+           UART_Write_Text(Retour);
+       }
+       else if(RCREG == 0x0D)
+       {
+           ScrollBuffer[index] = '\0';
+           index = 0;
+           BufferReady = 1;
+           UART_Write_Text(Retour);
+       }
+       else
+       {
+           BufferReady = 0;
+           ScrollBuffer[index] = RCREG;
+           TXREG = RCREG;
+           index++;
+           if(10 < index)
+           {
+               UART_Write_Text(error);
+               index = 0;
+           }
+       }
+    }
+
 }
 
 void main()
@@ -81,6 +121,7 @@ void main()
   
   while (1) {
       //distance = getFilteredData();
+      if(SonarReady)
       distance = getData();
 
       setBargraph(distance);
@@ -107,7 +148,7 @@ void main()
           Oled_SetFont(Segment_25x40, 25, 40, 46, 58);
           Oled_Text(number, 30, 3);
 
-          DataTransfert(distance);
+          DataTransfert(distance,ScrollBuffer);
 
           count = 0;
       }
