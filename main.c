@@ -23,7 +23,9 @@
 #include "ssd1306.h"
 #include "bargraph.h"
 
-
+char error[] = "ERROR commande  \n\r";
+char Retour[] = "\n\r";
+char EnterMenu[]= "\n\r*Menu options*\n\r Entrez ON/OFF \n\r Pour activer/desactiver le sonar\n\r";
 char ScrollBuffer[10];
 int index = 0;
 unsigned int distance = 0;
@@ -74,11 +76,12 @@ void interrupt high_isr (void)
             PIR1bits.TMR1IF = 0;    // Timer1 interrupt Flag cleared
     }
 
+
+
     if(RCIF) {
 
        if(RCREG == '²')
        {
-           char EnterMenu[]= "\n\r*Menu options*\n\r Entrez ON/OFF \n\r Pour activer/desactiver le sonar\n\r";
            UART_Write_Text(EnterMenu);
            Mode = 0;
            index = 0;
@@ -121,8 +124,16 @@ void main()
   
   while (1) {
       //distance = getFilteredData();
-      if(SonarReady)
-      distance = getData();
+      if(SonarReady == 0) {
+          distance = 600;
+      }
+      else {
+          distance = getData();
+      }
+
+      if (BufferReady == 1) {
+          DataCommand(ScrollBuffer);
+      }
 
       setBargraph(distance);
 
@@ -148,7 +159,7 @@ void main()
           Oled_SetFont(Segment_25x40, 25, 40, 46, 58);
           Oled_Text(number, 30, 3);
 
-          DataTransfert(distance,ScrollBuffer);
+          DataTransfert(number);
 
           count = 0;
       }

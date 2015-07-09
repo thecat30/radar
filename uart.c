@@ -27,11 +27,11 @@ void UART_Init()
         RCIE =1;
 }
 
-void DataTransfert(unsigned int distance, char* ScrollBuffer)
-{   
-    char* number = getChar(distance);
-
-        if(BufferReady==1) {
+void DataCommand(char* ScrollBuffer)
+{
+    char stop[] = "Sonar Stop\n\r";
+    char gone[] = "Sonar Play\n\r";
+    char error[] = "ERROR commande  \n\r";
 
             if(ScrollBuffer[0] == 'O' && ScrollBuffer[1] == 'N')
             {
@@ -40,7 +40,7 @@ void DataTransfert(unsigned int distance, char* ScrollBuffer)
                 BufferReady = 0;
                 Mode = 1;
             }
-            if(ScrollBuffer[0] == 'O' && ScrollBuffer[1] == 'F' && ScrollBuffer[2] == 'F')
+            else if(ScrollBuffer[0] == 'O' && ScrollBuffer[1] == 'F' && ScrollBuffer[2] == 'F')
             {
                 SonarReady = 0;
                 UART_Write_Text(stop);
@@ -54,7 +54,12 @@ void DataTransfert(unsigned int distance, char* ScrollBuffer)
             }
 
             ScrollBuffer[0] = '\0';
-        }
+}
+
+void DataTransfert(char* number)
+{
+    char backspace[] = "cm\n\r";
+    char longueur[] = "Longueur : ";
 
     if(Mode== 1 && SonarReady == 1)
     {

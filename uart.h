@@ -11,16 +11,12 @@
 int BufferReady = 0;
 int Mode = 1;
 int SonarReady = 1;
-char stop[] = "Sonar Stop\n\r";
-char gone[] = "Sonar Play\n\r";
-char backspace[] = "cm\n\r";
-char longueur[] = "Longueur : ";
-char error[] = "ERROR commande  \n\r";
-char Retour[] = "\n\r";
+
 
 
 extern void UART_Init(void);
-extern void DataTransfert(unsigned int distance ,char* ScrollBuffer);
+extern void DataCommand(char* ScrollBuffer);
+extern void DataTransfert(char* number);
 extern char UART_TX_Empty();
 extern char UART_Data_Ready();
 extern char UART_Read();
