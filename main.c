@@ -9,7 +9,7 @@
 #include "uart.h"
 
 #pragma config FOSC=INTIO7, FCMEN=OFF, IESO=OFF, PWRT=OFF, BOREN=OFF
-#pragma config BORV=30, WDTEN=OFF, WDTPS=1, MCLRE=ON, HFOFST=ON
+#pragma config BORV=30, WDTEN=ON, WDTPS=10, MCLRE=ON, HFOFST=ON
 #pragma config LPT1OSC=OFF, PBADEN=OFF, CCP2MX=PORTBE, STVREN=OFF
 #pragma config LVP=OFF, XINST=OFF, CP0=OFF, CP1=OFF, CP2=OFF
 #pragma config CP3=OFF, CPB=OFF, CPD=OFF, WRT0=OFF, WRT1=OFF
@@ -170,6 +170,8 @@ void main()
 
           count = 0;
       }
+
+      CLRWDT();
     }
 }
 
@@ -186,6 +188,8 @@ void init()
   initBuzzer();
 
   song();
+
+  CLRWDT();
 
   //INIT OLED
     I2C_Close();              // Close the  I2C Bus
