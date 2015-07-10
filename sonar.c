@@ -11,14 +11,14 @@ void initSonar()
 
 unsigned int getData()
 {
+    ADCON0bits.GO_NOT_DONE = 1;
+    
     while (ADCON0bits.GO_NOT_DONE == 1);
 
     arg1 = (unsigned int)ADRESH << 8;
     arg1 += ADRESL;
     arg2 = 325;
     MULT16();
-
-    ADCON0bits.GO_NOT_DONE = 1;
 
     return res >> 8;
 }

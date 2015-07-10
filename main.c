@@ -19,13 +19,13 @@
 //#include "bit_settings.h"
 #include "my_i2c.h"
 #include "font.h"
-#include "bitmap.h"
 #include "ssd1306.h"
 #include "bargraph.h"
 
 char error[] = "ERROR commande  \n\r";
 char Retour[] = "\n\r";
 char EnterMenu[]= "\n\r*Menu options*\n\r Entrez ON/OFF \n\r Pour activer/desactiver le sonar\n\r";
+char quit[] = "Exit Menu  \n\r";
 char ScrollBuffer[10];
 int index = 0;
 unsigned int distance = 0;
@@ -85,6 +85,7 @@ void interrupt high_isr (void)
         }
         else if(RCREG == 27 && Mode == 0) {
             Mode = 1;
+            UART_Write_Text(quit);
             UART_Write_Text(Retour);
         }
         else if(RCREG == 0x0D) {
@@ -118,7 +119,7 @@ void main()
   while (1) {
       //distance = getFilteredData();
       if(SonarReady == 0) {
-          distance = 600;
+          distance = 1000;
       }
       else {
           distance = getData();
@@ -141,7 +142,12 @@ void main()
       ++count;
 
       if (2048 < count) {
-          temp = getChar(distance);
+          if (distance == 1000) {
+              temp = "888";
+          }
+          else {
+              temp = getChar(distance);
+          }
 
           for (int i = 0; i < 4; ++i) {
               number[i] = temp[i];

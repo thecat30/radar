@@ -32,22 +32,18 @@ void DataCommand(char* ScrollBuffer)
     char stop[] = "Sonar Stop\n\r";
     char gone[] = "Sonar Play\n\r";
     char error[] = "Unknown command  \n\r";
-    char quit[] = "Exit Menu  \n\r";
+
             if(ScrollBuffer[0] == 'O' && ScrollBuffer[1] == 'N'  && ScrollBuffer[2] == '\0')
             {
                 SonarReady = 1;
                 UART_Write_Text(gone);
-                UART_Write_Text(quit);
                 BufferReady = 0;
-                Mode = 1;
             }
             else if(ScrollBuffer[0] == 'O' && ScrollBuffer[1] == 'F' && ScrollBuffer[2] == 'F' && ScrollBuffer[3] == '\0')
             {
                 SonarReady = 0;
                 UART_Write_Text(stop);
-                UART_Write_Text(quit);
                 BufferReady = 0;
-                Mode = 1;
             }
             else
             {
