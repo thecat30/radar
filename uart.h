@@ -7,12 +7,9 @@
 #ifndef UART_H
 #define	UART_H
 
-
 int BufferReady = 0;
 int Mode = 1;
 int SonarReady = 1;
-
-
 
 extern void UART_Init(void);
 extern void DataCommand(char* ScrollBuffer);

@@ -21,4 +21,3 @@ unsigned int getFilteredData();
 char* getChar(unsigned int value);
 
 #endif	/* SONAR_H */
-

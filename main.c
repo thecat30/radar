@@ -9,7 +9,7 @@
 #include "uart.h"
 
 #pragma config FOSC=INTIO7, FCMEN=OFF, IESO=OFF, PWRT=OFF, BOREN=OFF
-#pragma config BORV=30, WDTEN=ON, WDTPS=10, MCLRE=ON, HFOFST=ON
+#pragma config BORV=30, WDTEN=ON, WDTPS=15, MCLRE=ON, HFOFST=ON
 #pragma config LPT1OSC=OFF, PBADEN=OFF, CCP2MX=PORTBE, STVREN=OFF
 #pragma config LVP=OFF, XINST=OFF, CP0=OFF, CP1=OFF, CP2=OFF
 #pragma config CP3=OFF, CPB=OFF, CPD=OFF, WRT0=OFF, WRT1=OFF
@@ -30,7 +30,6 @@ char ScrollBuffer[10];
 int index = 0;
 unsigned int distance = 0;
 volatile int j=0;
-
 
 void init();
 
@@ -79,38 +78,33 @@ void interrupt high_isr (void)
     }
 
     if(RCIF) {
-       if(RCREG == '²')
-       {
-           UART_Write_Text(EnterMenu);
-           Mode = 0;
-           index = 0;
-       }
-       else if(RCREG == 27 && Mode == 0)
-       {
-           Mode = 1;
-           UART_Write_Text(Retour);
-       }
-       else if(RCREG == 0x0D)
-       {
-           ScrollBuffer[index] = '\0';
-           index = 0;
-           BufferReady = 1;
-           UART_Write_Text(Retour);
-       }
-       else
-       {
-           BufferReady = 0;
-           ScrollBuffer[index] = RCREG;
-           TXREG = RCREG;
-           index++;
-           if(10 < index)
-           {
-               UART_Write_Text(error);
-               index = 0;
-           }
-       }
-    }
+        if(RCREG == '²') {
+            UART_Write_Text(EnterMenu);
+            Mode = 0;
+            index = 0;
+        }
+        else if(RCREG == 27 && Mode == 0) {
+            Mode = 1;
+            UART_Write_Text(Retour);
+        }
+        else if(RCREG == 0x0D) {
+            ScrollBuffer[index] = '\0';
+            index = 0;
+            BufferReady = 1;
+            UART_Write_Text(Retour);
+        }
+        else {
+            BufferReady = 0;
+            ScrollBuffer[index] = RCREG;
+            TXREG = RCREG;
+            index++;
 
+            if(10 < index) {
+                UART_Write_Text(error);
+                index = 0;
+            }
+        }
+    }
 }
 
 void main()
@@ -144,8 +138,6 @@ void main()
         PIE1bits.TMR1IE = 1;    // Timer1 interrupt enabled
       }
 
-      //PIE1bits.TMR1IE = 0; //OUPS
-
       ++count;
 
       if (512 < count) {
@@ -154,14 +146,6 @@ void main()
           for (int i = 0; i < 4; ++i) {
               number[i] = temp[i];
           }
-
-
-          /*if (SonarReady == 1) {
-              Oled_Text("!", 110, 0);
-          }
-          else {
-              Oled_FillScreen(0x00, 110, 2);
-          }*/
 
           Oled_SetFont(Segment_25x40, 25, 40, 46, 58);
           Oled_Text(number, 30, 3);

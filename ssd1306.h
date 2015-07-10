@@ -9,7 +9,6 @@
 #define OLED_RES            LATBbits.LATB4
 #define TRIS_RES            TRISBbits.TRISB4
 
-
 #define PAGE0         0
 #define PAGE1         1
 #define PAGE2         2
@@ -37,6 +36,9 @@ typedef unsigned int             uint;
 cuchar *font, *font2;
 uchar width, height, min, max;
 
+unsigned int arg1, arg2;
+unsigned long res;
+
 void Oled_Init(void);
 void Oled_Command(uchar cmd);
 void Oled_WriteRam(uchar dat);
@@ -47,12 +49,6 @@ void Oled_ConstText(cschar *buffer, uchar seg, uchar pag);
 void Oled_Text(schar *buffer, uchar seg, uchar pag);
 void Oled_FillScreen(uchar pattern, uchar seg, uchar pag);
 void Oled_Image(cuchar *buffer);
-void Right_HorizontalScroll(uchar start_page, uchar end_page, uchar set_time);
-void Left_HorizontalScroll(uchar start_page, uchar end_page, uchar set_time);
-void VerticalRight_HorizontalScroll(uchar start_page, uchar end_page, uchar set_time);
-void VerticalLeft_HorizontalScroll(uchar start_page, uchar end_page, uchar set_time);
-void Deactivate_Scroll(void);
-void Activate_Scroll(void);
 
 void Oled_Init(void){
 Oled_Command(0xAE);                     // Set Display OFF
@@ -119,49 +115,52 @@ max    = _max;
 }
 
 void Oled_WriteChar(uchar c, uchar seg, uchar pag){
-uint i,j;
-uchar x_seg, y_pag;
-x_seg = seg;
-y_pag = pag;
-font = font2;
-j = c - min;
-j = j * (width * height);
-for(i = 0; i < j; i++){font++;}
-for(i = 0; i < width; i++)
-   {
+    uint i,j;
+    uchar x_seg, y_pag;
+    x_seg = seg;
     y_pag = pag;
-    for(j = 0; j < height; j++)
-       {
-        if(x_seg < 128)
-          {
-           Oled_SetPointer(x_seg, y_pag);
-           Oled_WriteRam(*font);
-          }
-        y_pag++;
+    font = font2;
+    j = c - min;
+
+    j = j * (width * height);
+
+    for(i = 0; i < j; i++) {
         font++;
-       }
-    x_seg++;
-   }
+    }
+    
+    for(i = 0; i < width; i++) {
+        y_pag = pag;
+
+        for(j = 0; j < height; j++) {
+            if(x_seg < 128) {
+                   Oled_SetPointer(x_seg, y_pag);
+                   Oled_WriteRam(*font);
+            }
+                y_pag++;
+                font++;
+        }
+
+        x_seg++;
+    }
 }
 
 void Oled_ConstText(cschar *buffer, uchar seg, uchar pag){
-uchar x_seg = seg;
-while(*buffer)
-     {
-      Oled_WriteChar(*buffer, x_seg, pag);
-      x_seg = x_seg + width;
-      buffer++;
-     }
+    uchar x_seg = seg;
+
+    while(*buffer) {
+          Oled_WriteChar(*buffer, x_seg, pag);
+          x_seg = x_seg + width;
+          buffer++;
+    }
 }
 
 void Oled_Text(schar *buffer, uchar seg, uchar pag){
-uchar x_seg = seg;
-while(*buffer)
-     {
-      Oled_WriteChar(*buffer, x_seg, pag);
-      x_seg = x_seg + width;
-      buffer++;
-     }
+    uchar x_seg = seg;
+    while(*buffer) {
+        Oled_WriteChar(*buffer, x_seg, pag);
+        x_seg = x_seg + width;
+        buffer++;
+    }
 }
 
 void Oled_FillScreen(uchar pattern, uchar seg, uchar pag)
@@ -190,16 +189,15 @@ void Oled_FillScreen(uchar pattern, uchar seg, uchar pag)
 }
 
 void Oled_Image(cuchar *buffer){
-unsigned char i,j;
-for(i = 0; i < 8; i++)
-   {
-    Oled_SetPointer(0, i);
-    for(j = 0; j < 128; j++)
-       {
-        Oled_WriteRam(*buffer);
-        buffer++;
-       }
-   }
+    unsigned char i,j;
+
+    for(i = 0; i < 8; i++) {
+        Oled_SetPointer(0, i);
+
+        for(j = 0; j < 128; j++) {
+            Oled_WriteRam(*buffer);
+            buffer++;
+        }
+    }
 }
 #endif	/* SSD1306_H */
-
