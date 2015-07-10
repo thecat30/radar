@@ -2,7 +2,6 @@
 #define	SSD1306_H
 #include <xc.h>
 #include "my_i2c.h"
-#include "my_delays.h"
 
 //#define OLED_12C_ADDRESS    0x7A // If SA0 = 1
 #define OLED_12C_ADDRESS    0x78 // If SA0 = 0

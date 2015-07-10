@@ -40,22 +40,22 @@ void interrupt high_isr (void)
             if (distance<25)
             {
                 TRISBbits.RB3=0;
-                TMR1H = 245;             // preset for timer1 MSB register
-                TMR1L = 149;             // preset for timer1 LSB register
+                TMR1H = 172;             // preset for timer1 MSB register
+                TMR1L = 176;             // preset for timer1 LSB register
                 //0 sec
             }
             else if ((distance>=25)&&(distance<40))
             {
                 TRISBbits.RB3=~TRISBbits.RB3;
-                TMR1H = 241;             // preset for timer1 MSB register
-                TMR1L = 62;             // preset for timer1 LSB register
+                TMR1H = 137;             // preset for timer1 MSB register
+                TMR1L = 250;             // preset for timer1 LSB register
                 // 0.1s
             }
             else if ((distance>=40)&&(distance<70))
             {
                 TRISBbits.RB3=~TRISBbits.RB3;
-                TMR1H = 206;             // preset for timer1 MSB register
-                TMR1L = 136;             // preset for timer1 LSB register
+                TMR1H = 58;             // preset for timer1 MSB register
+                TMR1L = 36;             // preset for timer1 LSB register
 
                 // 0.1s
             }
@@ -66,11 +66,11 @@ void interrupt high_isr (void)
 
                 do{
                     j++;
-                } while (j < 1000);
+                } while (j < 16000);
 
                TRISBbits.RB3=1;
-               TMR1H = 194;             // preset for timer1 MSB register
-               TMR1L = 98;             // preset for timer1 LSB register
+               TMR1H = 0;             // preset for timer1 MSB register
+               TMR1L = 222;             // preset for timer1 LSB register
             }
 
             T1CONbits.TMR1ON  = 1;
@@ -140,7 +140,7 @@ void main()
 
       ++count;
 
-      if (512 < count) {
+      if (2048 < count) {
           temp = getChar(distance);
 
           for (int i = 0; i < 4; ++i) {
@@ -161,7 +161,7 @@ void main()
 
 void init()
 {
-  OSCCON = 0b00110010;
+  OSCCON = 0b01100010;
   
   UART_Init();
 

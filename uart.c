@@ -11,8 +11,8 @@ void UART_Init()
         nRBPU = 0;    //Enables PORTB Internal Pull Up Resistors
         //      BAUDCON: BAUD RATE CONTROL REGISTER           //
         BRG16 = 0; // 8-bit Baud Rate Generator is used
-        SPBRG = 25; // Baudrate config
-        BRGH = 1;
+        SPBRG = 12; // Baudrate config 25
+        BRGH = 0;//0
         //      TXSTA: TRANSMIT STATUS AND CONTROL REGISTER   //
         TX9 = 0;   // Selects 8-bit transmission
         TXEN = 1;  // Transmit enabled
