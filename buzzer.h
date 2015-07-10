@@ -9,6 +9,7 @@
 #define	BUZZER_H
 
 void initBuzzer();
+void song();
 
 #endif	/* BUZZER_H */
 

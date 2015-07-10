@@ -31,3 +31,119 @@ void initBuzzer()
 
     INTCONbits.GIE  = 1;    // Bit7 enable Global interrupts
 }
+
+void Song (void)
+{
+    INTCONbits.GIE  = 0;    // Bit7 disable Global interrupts
+
+    TRISBbits.RB3 = 0;       // Disable RB3 output
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+    Delay10KTCYx(3);
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+    Delay10KTCYx(4);
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+    Delay10KTCYx(3);
+    PR2 = 0xCC; // Initial Period
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+
+    Delay10KTCYx(7);
+    TMR2ON = 1;
+    Delay10KTCYx(5);
+    TMR2ON = 0;
+    Delay10KTCYx(7);
+    PR2 = 0xaa; // Initial Period
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+    Delay10KTCYx(7);
+    TMR2ON = 1;
+    Delay10KTCYx(5);
+    TMR2ON = 0;
+    Delay10KTCYx(7);
+    PR2 = 0x55; // Initial Period
+    TMR2ON = 1;
+    Delay10KTCYx(12);
+    TMR2ON = 0;
+
+    Delay10KTCYx(7);
+    PR2 = 0xff; // Initial Period
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+    Delay10KTCYx(3);
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+    Delay10KTCYx(7);
+
+    TMR2ON = 1;
+    PR2 = 0xff; // Initial Period
+    INTCONbits.GIE  = 1;    // Bit7 enable Global interrupts
+}
+
+void song ()
+{
+    INTCONbits.GIE  = 0;    // Bit7 disable Global interrupts
+
+    TRISBbits.RB3 = 0;       // Disable RB3 output
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+    Delay10KTCYx(3);
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+    Delay10KTCYx(4);
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+    Delay10KTCYx(3);
+    PR2 = 0xCC; // Initial Period
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+
+    Delay10KTCYx(7);
+    TMR2ON = 1;
+    Delay10KTCYx(5);
+    TMR2ON = 0;
+    Delay10KTCYx(7);
+    PR2 = 0xaa; // Initial Period
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+    Delay10KTCYx(7);
+    TMR2ON = 1;
+    Delay10KTCYx(5);
+    TMR2ON = 0;
+    Delay10KTCYx(7);
+    PR2 = 0x55; // Initial Period
+    TMR2ON = 1;
+    Delay10KTCYx(8);
+    TMR2ON = 0;
+
+    Delay10KTCYx(7);
+    PR2 = 0xff; // Initial Period
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+    Delay10KTCYx(3);
+    TMR2ON = 1;
+    Delay10KTCYx(2);
+    TMR2ON = 0;
+    Delay10KTCYx(7);
+
+    TRISBbits.RB3 = 1;      // Disable RB3 output
+    PIE1bits.TMR1IE = 0;    // Timer1 interrupt disabled
+    TMR2ON = 1;
+    PR2 = 0xff; // Initial Period
+    INTCONbits.GIE  = 1;    // Bit7 enable Global interrupts
+}

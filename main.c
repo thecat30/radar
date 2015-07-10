@@ -38,14 +38,14 @@ void interrupt high_isr (void)
 {
     if ((PIR1bits.TMR1IF==1)&&(PIE1bits.TMR1IE == 1))
     {
-            if (distance<20)
+            if (distance<25)
             {
                 TRISBbits.RB3=0;
                 TMR1H = 245;             // preset for timer1 MSB register
                 TMR1L = 149;             // preset for timer1 LSB register
                 //0 sec
             }
-            else if ((distance>=20)&&(distance<40))
+            else if ((distance>=25)&&(distance<40))
             {
                 TRISBbits.RB3=~TRISBbits.RB3;
                 TMR1H = 241;             // preset for timer1 MSB register
@@ -117,7 +117,7 @@ void main()
 {
   char* temp;
   char number[4];
-  char count = 0;
+  int count = 0;
   
   init();
   
@@ -144,11 +144,11 @@ void main()
         PIE1bits.TMR1IE = 1;    // Timer1 interrupt enabled
       }
 
-      PIE1bits.TMR1IE = 0; //OUPS
+      //PIE1bits.TMR1IE = 0; //OUPS
 
       ++count;
 
-      if (180 < count) {
+      if (512 < count) {
           temp = getChar(distance);
 
           for (int i = 0; i < 4; ++i) {
@@ -156,12 +156,12 @@ void main()
           }
 
 
-          if (SonarReady == 1) {
+          /*if (SonarReady == 1) {
               Oled_Text("!", 110, 0);
           }
           else {
               Oled_FillScreen(0x00, 110, 2);
-          }
+          }*/
 
           Oled_SetFont(Segment_25x40, 25, 40, 46, 58);
           Oled_Text(number, 30, 3);
@@ -185,13 +185,16 @@ void init()
 
   initBuzzer();
 
+  song();
+
   //INIT OLED
     I2C_Close();              // Close the  I2C Bus
     I2C_Init(1);             // I2C 400kHz, 20MHz-CRYSTAL
     Oled_Init();
     Oled_SetFont(Terminal12x16, 12, 16, 32,127);
     Oled_FillScreen(0x00, 0, 0);
-    Oled_ConstText("SONAR:", 35, 0);
+    Oled_ConstText("SONAR", 35, 0);
+    Oled_Text("!", 110, 0);
     Oled_ConstText("L=", 2, 5);
     Oled_ConstText("cm", 105, 5);
 }

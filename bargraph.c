@@ -3,6 +3,7 @@
 void initBargraph()
 {
     TRISD = 0x00;
+    LATD = 0;
 }
 
 void setBargraph(unsigned int distance)
@@ -30,7 +31,7 @@ void setBargraph(unsigned int distance)
                             if (distance < 30) {
                                 LATD6 = 1;
                                 
-                                if (distance < 20) {
+                                if (distance < 25) {
                                     LATD7 = 1;
                                 }
                             }
